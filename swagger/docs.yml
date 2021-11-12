@@ -1,0 +1,256 @@
+openapi: '3.0.2'
+info:
+  title: API Bet
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/api
+components:
+  schemas:
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          default: 'Japan'
+        code:
+          type: string
+          default: 'JP'
+    TeamListResponse:
+      type: object
+      properties:
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+    TeamSingleResponse:
+      type: object
+      properties:
+        team:
+          $ref: '#/components/schemas/Team'
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          default: 'Japan'
+        status:
+          type: string
+          default: 'active'
+        country:
+          $ref: '#/components/schemas/Country'
+    CountryListResponse:
+      type: object
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+    CountrySingleResponse:
+      type: object
+      properties:
+        country:
+          $ref: '#/components/schemas/Country'
+    
+    PlayerRequestCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Player name
+        status:
+          type: string
+          default: 'inactive'
+        dob:
+          type: string
+        team_id:
+          type: integer
+        country_id:
+          type: integer
+    Player:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Player Id
+        name:
+          type: string
+          description: Player name
+        dob:
+          type: string
+        status:
+          type: string
+        team:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        country:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+paths:
+  /countries:
+    get:
+      tags:
+        - "country"
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Keyword for search country
+      responses:
+        '200':
+          description: Countries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountryListResponse'
+  /countries/{countryId}:
+    get:
+      tags:
+        - "country"
+      parameters:
+        - in: path
+          required: true
+          name: countryId
+          schema:
+            type: string
+          description: id of country
+      responses:
+        '200':
+          description: Countries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CountrySingleResponse'
+  /players:
+    get:
+      tags:
+        - "player"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+
+    post:
+      tags:
+        - "player"
+      description: Create player
+      requestBody:
+        description: Player parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerRequestCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+  /players/{playerId}:
+    get:
+      description: Get info of one player
+      tags:
+        - "player"
+      parameters:
+        - in: path
+          name: playerId
+          schema:
+            type: integer
+          required: true
+          description: Id of player
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+    put:
+      description: Update player
+      tags:
+        - "player"
+      requestBody:
+        description: Player parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerRequestCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+    delete:
+      description: Delete player
+      tags:
+        - "player"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+  /teams:
+    get:
+      tags:
+        - "team"
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Keyword for search team
+      responses:
+        '200':
+          description: Countries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamListResponse'
+  /teams/{teamId}:
+    get:
+      tags:
+        - "team"
+      parameters:
+        - in: path
+          name: teamId
+          required: true
+          schema:
+            type: string
+          description: Keyword for search team
+      responses:
+        '200':
+          description: Countries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamSingleResponse'
