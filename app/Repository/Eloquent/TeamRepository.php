@@ -26,6 +26,30 @@ class TeamRepository extends BaseRepository implements TeamRepositoryInterface
     }
 
     /**
+    * @param int $id
+    * @param array $attributes
+    *
+    * @return Model
+    */
+    public function save(int $id, array $attributes)
+    {
+        $team = $this->model->find($id);
+        $team->update($attributes);
+        return $team;
+    }
+
+    /**
+    * @param int $id
+    *
+    * @return Model
+    */
+    public function delete(int $id)
+    {
+        $team = $this->model->find($id);
+        return $team->delete();
+    }
+
+    /**
     * @return Collection
     */
     public function get(): Collection {

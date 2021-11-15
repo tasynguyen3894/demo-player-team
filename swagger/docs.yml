@@ -29,6 +29,20 @@ components:
       properties:
         team:
           $ref: '#/components/schemas/Team'
+    TeamRequestCreate:
+      type: object
+      required:
+        - "name"
+        - "birthday"
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+        status:
+          type: string
+        country_id:
+          type: integer
     Team:
       type: object
       properties:
@@ -236,6 +250,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeamListResponse'
+    post:
+      tags:
+        - "team"
+      requestBody:
+        description: Player parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequestCreate'
+      responses:
+        '200':
+          description: Create team success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamSingleResponse'
   /teams/{teamId}:
     get:
       tags:
@@ -249,7 +280,7 @@ paths:
           description: Keyword for search team
       responses:
         '200':
-          description: Countries
+          description: Teams
           content:
             application/json:
               schema:

@@ -4,8 +4,17 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\BaseRequest;
 
-class TeamCreateRequest extends BaseRequest
+class TeamUpdateRequest extends BaseRequest
 {
+
+    public function validationData() {
+        return $this->only([
+            'name',
+            'country_id',
+            'status'
+        ]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,17 +25,6 @@ class TeamCreateRequest extends BaseRequest
         return true;
     }
 
-    
-
-    public function validationData() {
-        return $this->only([
-            'id',
-            'name',
-            'country_id',
-            'status'
-        ]);
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -35,8 +33,7 @@ class TeamCreateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'country_id' => 'required|exists:country,id'
+            'country_id' => 'nullable|exists:country,id'
         ];
     }
 }
