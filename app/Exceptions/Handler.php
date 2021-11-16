@@ -50,6 +50,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof AdminAPIException) {
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage()
+            ], $exception->statusCode());
+        }
         return parent::render($request, $exception);
     }
 }
